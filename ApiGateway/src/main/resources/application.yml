@@ -1,0 +1,52 @@
+server:
+  port: 7074
+
+spring:
+  application:
+    name: API-GATEWAY
+    
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:        
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders:
+              - content-type
+            allowedMethods:
+              - GET
+              - POST
+      
+      routes:
+      - id: USERSERVICE-MS
+        uri: lb://USERSERVICE-MS
+        predicates:
+         - Path=/exuser/**
+         
+      - id: ENCRYPTDECRYPT-MS
+        uri: lb://ENCRYPTDECRYPT-MS
+        predicates:
+         - Path=/api/**
+         
+      - id: USERPANEL-MS
+        uri: lb://USERPANEL-MS
+        predicates:
+         - Path=/user/**
+         
+      - id: FRONTEND-MS
+        uri: lb://FRONTEND-MS
+        predicates:
+         - Path=/**
+         
+eureka:
+
+  instance:
+    prefer-ip-address: true  
+      
+  client:
+    fetch-registry: true
+    
+    register-with-eureka: true
+    
+    service-url:
+     defaultZone: http://localhost:8761/eureka
